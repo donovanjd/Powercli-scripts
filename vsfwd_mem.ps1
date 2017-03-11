@@ -1,8 +1,13 @@
+# Author: Donovan Durand
+# Website: http://www.virtual-chronicles.com/
+# Description: PowerCli script to increase the vsfwd memory on NSX prepared ESXi hosts
+
+
 Connect-VIServer -Server 192.168.10.1 -User root -Password supersecret
 $cluster = Read-Host "Enter cluster name:"
 $esxhosts = Get-Cluster $cluster | Get-VMHost
 $esxcreds = Get-Credential
-$datastore = "iscsi-storage"
+$datastore = "<datastore_name>"
 
 foreach ($esx in $esxhosts){
 Write-host "Connecting to:" $esx
