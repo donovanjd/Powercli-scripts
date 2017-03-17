@@ -19,8 +19,14 @@ Invoke-SSHCommand -SSHSession $ssh -Command (" /etc/init.d/vShield-Stateful-Fire
 Write-host "Backup original vShield-Stateful-Firewall config file" -ForegroundColor Green
 Invoke-SSHCommand -SSHSession $ssh -Command (" cp /etc/init.d/vShield-Stateful-Firewall /etc/init.d/vShield-Stateful-Firewall.orig")
 
-Write-host "Copying file from the datastore to /tmp" -ForegroundColor Green
-Invoke-SSHCommand -SSHSession $ssh -Command (" cp /vmfs/volumes/$datastore/vShield-Stateful-Firewall /tmp/")
+Write-host "Copying file to /tmp" -ForegroundColor Green
+Invoke-SSHCommand -SSHSession $ssh -Command (" cp /etc/init.d/vShield-Stateful-Firewall /tmp/")
+
+Write-host "Changing vsfwd memory to 512mb" -ForegroundColor Green
+Invoke-SSHCommand -SSHSession $ssh -Command (" sed -i '/MEMSIZE/s/256/512/' /tmp/vShield-Stateful-Firewall") 
+
+Write-host "Copying file to datastore" -ForegroundColor Green
+Invoke-SSHCommand -SSHSession $ssh -Command (" cp /tmp/vShield-Stateful-Firewall /vmfs/volumes/$datastore/")
 
 Write-host "Starting vShield-Stateful-Firewall service from the /tmp folder" -ForegroundColor Green
 Invoke-SSHCommand -SSHSession $ssh -Command (" /tmp/vShield-Stateful-Firewall start")
